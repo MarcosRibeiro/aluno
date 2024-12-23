@@ -1,0 +1,117 @@
+// --- cadastro-aluno.jdl ---
+
+entity CadastroAluno {
+    data LocalDate required
+    matricula String
+    grupo String
+    nome String required
+    dn LocalDate required
+    cep String required
+    endereco String required
+    qd String
+    lote String
+    endnumero String
+    bairro String
+    municipio String
+    uf String
+    fone String required
+    certidao String
+    termo String
+    cartorio String
+    naturalidade String
+    rg String
+    cpf String required
+    nis String
+    cras String
+    filiacaoPai String
+    paiTelefone String
+    paiNaturalidade String
+    paiUf String
+    paiRg String
+    paiDataNascimento LocalDate
+    paiCpf String
+    paiNis String
+    paiTituloEleitor String
+    paiZona String
+    paiSecao String
+    paiMunicipio String
+    filiacaoMae String required
+    maeTelefone String
+    maeNaturalidade String
+    maeUf String
+    maeRg String
+    maeDataNascimento LocalDate
+    maeCpf String
+    maeNis String
+    maeTituloEleitor String
+    maeZona String
+    maeSecao String
+    maeMunicipio String
+    nomeEscola String
+    anoCursando String
+    turno Turno
+    mediaEscolar Double
+    prioritario SimNao
+    obs String
+    comportamentoCasa Comportamento
+    comportamentoEscola Comportamento
+    deficiencia SimNao
+    adaptacoes SimNao
+    medicacao SimNao
+    medicacaoDesc String
+    alergia SimNao
+    alergiaDesc String
+    historicoMedico String
+    rendaFamiliar String
+    pessoasTrabalham Integer
+    numPessoasLar Integer
+    beneficioSocial SimNao
+    beneficios String
+    tipoResidencia TipoResidencia
+    tipoResidenciaDesc String
+    situacaoResidencia SituacaoResidencia
+    situacaoResidenciaDesc String
+    contatoEmergencia String required
+    foneEmergencia String required
+    relacaoEmergencia String required
+    autorizacao Boolean required
+    fotoAluno String
+    fotoMae String
+}
+
+entity Responsavel {
+    nome String
+    parentesco String
+}
+
+entity Deslocamento {
+    nome String
+    grau String
+}
+
+enum Turno {
+    MATUTINO, VESPERTINO, NOTURNO
+}
+
+enum SimNao {
+    SIM, NAO
+}
+
+enum Comportamento {
+    TRANQUILO, AGITADO
+}
+
+enum TipoResidencia {
+    CASA, APARTAMENTO, OUTRO
+}
+
+enum SituacaoResidencia {
+    PROPRIA, ALUGADA, CEDIDA, OUTRA
+}
+
+relationship OneToMany {
+    CadastroAluno{responsavel} to Responsavel
+    CadastroAluno{deslocamento} to Deslocamento
+}
+
+paginate CadastroAluno, Responsavel, Deslocamento with pagination
