@@ -1,28 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReactiveFormsModule } from '@angular/forms'; // Importe o ReactiveFormsModule
+import { CadastroAlunoComponent } from './list/cadastro-aluno.component';
+import { CadastroAlunoUpdateComponent } from './update/cadastro-aluno-update.component';
+import { CadastroAlunoRoutingModule } from './route/cadastro-aluno-routing.module';
+import { ResponsavelModule } from './entities/responsavel/responsavel.module';
+import { DeslocamentoModule } from './entities/deslocamento/deslocamento.module';
+//import { SharedModule } from 'app/shared/shared.module'; // Verifique se este módulo exporta os componentes e diretivas que você está usando
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TranslateModule } from '@ngx-translate/core';
 
-import FindLanguageFromKeyPipe from './language/find-language-from-key.pipe';
-import TranslateDirective from './language/translate.directive';
-import { AlertComponent } from './alert/alert.component';
-import { AlertErrorComponent } from './alert/alert-error.component';
-
-/**
- * Application wide Module
- */
 @NgModule({
-  imports: [AlertComponent, AlertErrorComponent, FindLanguageFromKeyPipe, TranslateDirective],
-  exports: [
+  imports: [
+    SharedModule,
     CommonModule,
-    NgbModule,
+    ReactiveFormsModule, // Adicione o ReactiveFormsModule aqui
+    CadastroAlunoRoutingModule,
+    CadastroAlunoComponent,
+    CadastroAlunoUpdateComponent,
+    ResponsavelModule,
+    DeslocamentoModule,
     FontAwesomeModule,
-    AlertComponent,
-    AlertErrorComponent,
-    TranslateModule,
-    FindLanguageFromKeyPipe,
-    TranslateDirective,
   ],
 })
-export default class SharedModule {}
+export class CadastroAlunoModule {}

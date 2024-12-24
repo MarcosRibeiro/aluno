@@ -21,7 +21,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import tech.jhipster.security.RandomUtil;
 
 /**
@@ -53,7 +53,7 @@ class UserServiceIT {
      *
      * @see com.mycompany.myapp.repository.search.UserSearchRepositoryMockConfiguration
      */
-    @MockitoSpyBean
+    @SpyBean
     private UserSearchRepository spiedUserSearchRepository;
 
     private User user;
@@ -62,7 +62,7 @@ class UserServiceIT {
     public void init() {
         user = new User();
         user.setLogin(DEFAULT_LOGIN);
-        user.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
+        user.setPassword(RandomStringUtils.randomAlphanumeric(60));
         user.setActivated(true);
         user.setEmail(DEFAULT_EMAIL);
         user.setFirstName(DEFAULT_FIRSTNAME);
@@ -151,7 +151,7 @@ class UserServiceIT {
     void assertThatNotActivatedUsersWithNotNullActivationKeyCreatedBefore3DaysAreDeleted() {
         Instant now = Instant.now();
         user.setActivated(false);
-        user.setActivationKey(RandomStringUtils.insecure().next(20));
+        user.setActivationKey(RandomStringUtils.random(20));
         User dbUser = userRepository.save(user).block();
         dbUser.setCreatedDate(now.minus(4, ChronoUnit.DAYS));
         userRepository.save(user).block();

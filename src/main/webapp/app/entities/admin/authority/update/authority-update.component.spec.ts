@@ -44,7 +44,7 @@ describe('Authority Management Update Component', () => {
 
   describe('ngOnInit', () => {
     it('Should update editForm', () => {
-      const authority: IAuthority = { name: 'c56c1cf7-aca8-48fe-ad81-eeebbf872cb1' };
+      const authority: IAuthority = { name: 'CBA' };
 
       activatedRoute.data = of({ authority });
       comp.ngOnInit();
@@ -57,7 +57,7 @@ describe('Authority Management Update Component', () => {
     it('Should call create service on save for new entity', () => {
       // GIVEN
       const saveSubject = new Subject<HttpResponse<IAuthority>>();
-      const authority = { name: '572a7ecc-bf76-43f4-8026-46b42fba586d' };
+      const authority = { name: 'ABC' };
       jest.spyOn(authorityFormService, 'getAuthority').mockReturnValue({ name: null });
       jest.spyOn(authorityService, 'create').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');

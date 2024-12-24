@@ -85,10 +85,10 @@ class UserResourceIT {
      */
     public static User createEntity() {
         User persistUser = new User();
-        persistUser.setLogin(DEFAULT_LOGIN + RandomStringUtils.insecure().nextAlphabetic(5));
-        persistUser.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
+        persistUser.setLogin(DEFAULT_LOGIN + RandomStringUtils.randomAlphabetic(5));
+        persistUser.setPassword(RandomStringUtils.randomAlphanumeric(60));
         persistUser.setActivated(true);
-        persistUser.setEmail(RandomStringUtils.insecure().nextAlphabetic(5) + DEFAULT_EMAIL);
+        persistUser.setEmail(RandomStringUtils.randomAlphabetic(5) + DEFAULT_EMAIL);
         persistUser.setFirstName(DEFAULT_FIRSTNAME);
         persistUser.setLastName(DEFAULT_LASTNAME);
         persistUser.setImageUrl(DEFAULT_IMAGEURL);
@@ -267,6 +267,7 @@ class UserResourceIT {
             .returnResult(AdminUserDTO.class)
             .getResponseBody()
             .blockFirst();
+
         assertThat(foundUser.getLogin()).isEqualTo(DEFAULT_LOGIN);
         assertThat(foundUser.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
         assertThat(foundUser.getLastName()).isEqualTo(DEFAULT_LASTNAME);
@@ -410,7 +411,7 @@ class UserResourceIT {
 
         User anotherUser = new User();
         anotherUser.setLogin("jhipster");
-        anotherUser.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
+        anotherUser.setPassword(RandomStringUtils.randomAlphanumeric(60));
         anotherUser.setActivated(true);
         anotherUser.setEmail("jhipster@localhost");
         anotherUser.setFirstName("java");
@@ -457,7 +458,7 @@ class UserResourceIT {
 
         User anotherUser = new User();
         anotherUser.setLogin("jhipster");
-        anotherUser.setPassword(RandomStringUtils.insecure().nextAlphanumeric(60));
+        anotherUser.setPassword(RandomStringUtils.randomAlphanumeric(60));
         anotherUser.setActivated(true);
         anotherUser.setEmail("jhipster@localhost");
         anotherUser.setFirstName("java");

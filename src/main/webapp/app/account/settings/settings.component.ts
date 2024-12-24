@@ -10,6 +10,7 @@ import { LANGUAGES } from 'app/config/language.constants';
 const initialAccount: Account = {} as Account;
 
 @Component({
+  standalone: true,
   selector: 'jhi-settings',
   imports: [SharedModule, FormsModule, ReactiveFormsModule],
   templateUrl: './settings.component.html',

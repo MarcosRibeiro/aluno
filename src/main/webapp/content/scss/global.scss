@@ -233,4 +233,211 @@ angular-cli removes postcss-rtl processed inline css, processed rules must be ad
     }
   }
 }
+
+/* ==========================================================================
+cadastro-aluno styles
+========================================================================== */
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
+  font-size: 16px;
+}
+
+.container {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 1000px;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+}
+
+h1,
+h2,
+h3 {
+  color: #343a40;
+  text-align: center;
+  transition: color 0.3s ease-in-out;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  transition: color 0.3s ease-in-out;
+}
+
+.form-control {
+  font-size: 18px;
+  padding: 12px;
+  border-radius: 5px;
+  transition: box-shadow 0.3s ease-in-out;
+  position: relative;
+}
+
+.form-select {
+  appearance: auto;
+  width: 100%;
+  /* Ajusta a largura do elemento select para ocupar 100% do contêiner pai */
+}
+
+.form-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #aaa;
+  transition: color 0.3s ease-in-out;
+}
+
+.form-clear:hover {
+  color: #000;
+}
+
+.btn-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: 15px 30px;
+  font-size: 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.form-group.required .form-control:valid {
+  background-color: #f0fff4;
+}
+
+.form-group.required .form-control:invalid {
+  background-color: #fff3f3;
+}
+
+.collapse-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 15px;
+  background-color: #e9ecef;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out;
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.collapse-header:hover {
+  background-color: #d3d9df;
+}
+
+.collapse-header h3 {
+  margin: 0;
+  padding: 0;
+  color: #343a40;
+  text-align: center;
+}
+
+.collapse-header .bi {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.collapse.show .collapse-header .bi {
+  transform: rotate(180deg);
+}
+
+.divider {
+  border-bottom: 1px solid #ced4da;
+  margin: 20px 0;
+}
+
+.foto-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.foto-upload {
+  width: 120px;
+  height: 150px;
+  border: 2px dashed #ced4da;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.foto-upload img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.foto-upload input[type='file'] {
+  display: none;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.btn-danger {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  .collapse-header {
+    font-size: 1.2rem;
+    padding: 10px;
+  }
+
+  .btn-primary {
+    padding: 10px 20px;
+    font-size: 18px;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-control:invalid {
+  border-color: #e3342f;
+  background-color: #fcebea;
+}
+
+.form-control:valid {
+  border-color: #38c172;
+  background-color: #e3fcec;
+}
+
+.error-message {
+  color: #e3342f;
+  font-size: 0.875rem;
+}
+
 /* jhipster-needle-scss-add-main JHipster will add new css style */

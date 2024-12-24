@@ -16,6 +16,7 @@
 spring:
   application:
     name: cadastroAluno
+  cloud:
   # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:
     contexts: test
@@ -75,7 +76,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
-        base64-secret: Y2FiMzFmZWQwYWU2MzFkNTE2MjM5ZTIxMGViNDkxMDMxZWVmMzRiODg5YTNlZGFiMDdhNmJkYTdmNmEwOGRkNTA4OGVkYTM4NWRkMjg3MjU5ZmY1OWM3MDEwMmZkN2VhOGQxZDlmZTAxMDg4YTVmMzU4ZDhiMTA5YjM5ZmJlNGE=
+        base64-secret: MGQ2ZmI2YmMxNzgxMzMzNjdlZDRhYmI2MjkyYzY2ODg0NmFlOGUwMTFkZmE2ODczMjliYzc1OTlkMDNmOTcxNTc0MTcwODA4NjEyYjhlNTkwZDkyYWZkNDlmMjY2MjMxODllODQwZjk4NGEzNDgyYzE3OTFiZjFiNWU1YTViMGU=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 86400

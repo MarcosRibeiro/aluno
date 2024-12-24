@@ -27,9 +27,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import tech.jhipster.config.JHipsterProperties;
 
 /**
@@ -40,7 +40,6 @@ class MailServiceIT {
 
     private static final String[] languages = {
         "pt-br",
-        "en",
         // jhipster-needle-i18n-language-constant - JHipster will add/remove languages in this array
     };
     private static final Pattern PATTERN_LOCALE_3 = Pattern.compile("([a-z]{2})-([a-zA-Z]{4})-([a-z]{2})");
@@ -49,7 +48,7 @@ class MailServiceIT {
     @Autowired
     private JHipsterProperties jHipsterProperties;
 
-    @MockitoBean
+    @MockBean
     private JavaMailSender javaMailSender;
 
     @Captor

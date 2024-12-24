@@ -36,15 +36,15 @@ spring:
   # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:
     contexts: prod
-    url: jdbc:postgresql://localhost:5432/cadastroAluno
+    url: jdbc:mysql://localhost:3306/cadastroAluno?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&createDatabaseIfNotExist=true
   mail:
     host: localhost
     port: 25
     username:
     password:
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/cadastroAluno
-    username: cadastroAluno
+    url: r2dbc:mysql://localhost:3306/cadastroAluno?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&createDatabaseIfNotExist=true
+    username: root
     password:
   thymeleaf:
     cache: true
@@ -94,7 +94,7 @@ jhipster:
         # - In the Consul configserver
         # - In a separate `application-prod.yml` file, in the same folder as your executable JAR file
         # - In the `JHIPSTER_SECURITY_AUTHENTICATION_JWT_BASE64_SECRET` environment variable
-        base64-secret: Y2FiMzFmZWQwYWU2MzFkNTE2MjM5ZTIxMGViNDkxMDMxZWVmMzRiODg5YTNlZGFiMDdhNmJkYTdmNmEwOGRkNTA4OGVkYTM4NWRkMjg3MjU5ZmY1OWM3MDEwMmZkN2VhOGQxZDlmZTAxMDg4YTVmMzU4ZDhiMTA5YjM5ZmJlNGE=
+        base64-secret: MGQ2ZmI2YmMxNzgxMzMzNjdlZDRhYmI2MjkyYzY2ODg0NmFlOGUwMTFkZmE2ODczMjliYzc1OTlkMDNmOTcxNTc0MTcwODA4NjEyYjhlNTkwZDkyYWZkNDlmMjY2MjMxODllODQwZjk4NGEzNDgyYzE3OTFiZjFiNWU1YTViMGU=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000

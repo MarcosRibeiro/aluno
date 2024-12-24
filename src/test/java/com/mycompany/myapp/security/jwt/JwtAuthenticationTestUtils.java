@@ -30,7 +30,6 @@ public class JwtAuthenticationTestUtils {
         return new SimpleMeterRegistry();
     }
 
-    // TODO switch to MockitoSpyBean https://github.com/spring-projects/spring-framework/issues/33941
     @MockBean
     private ReactiveUserDetailsService userDetailsService;
 

@@ -205,8 +205,9 @@ public class EntityManager {
         if (sortParameter != null && sortParameter.isSorted()) {
             RelationalPersistentEntity<?> entity = getPersistentEntity(entityType);
             if (entity != null) {
+                Sort sort = updateMapper.getMappedObject(sortParameter, entity);
                 selectFrom = selectFrom.orderBy(
-                    createOrderByFields(Table.create(entity.getTableName()).as(EntityManager.ENTITY_ALIAS), sortParameter)
+                    createOrderByFields(Table.create(entity.getTableName()).as(EntityManager.ENTITY_ALIAS), sort)
                 );
             }
         }

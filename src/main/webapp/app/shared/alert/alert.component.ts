@@ -5,6 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Alert, AlertService } from 'app/core/util/alert.service';
 
 @Component({
+  standalone: true,
   selector: 'jhi-alert',
   templateUrl: './alert.component.html',
   imports: [CommonModule, NgbModule],

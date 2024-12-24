@@ -36,7 +36,13 @@ export default tseslint.config(
         project: ['./tsconfig.app.json', './tsconfig.spec.json'],
       },
     },
-    processor: angular.processInlineTemplates,
+    processor: {
+      // https://github.com/angular-eslint/angular-eslint/issues/1917
+      meta: {
+        name: 'extract-inline-html',
+      },
+      ...angular.processInlineTemplates,
+    },
     rules: {
       '@angular-eslint/component-selector': [
         'error',
