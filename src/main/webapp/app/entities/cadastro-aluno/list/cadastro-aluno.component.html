@@ -55,68 +55,43 @@
   </div>
 
   <div class="table-responsive table-entities" id="entities" *ngIf="cadastroAlunos && cadastroAlunos.length > 0">
-    <table class="table table-striped" aria-describedby="page-heading">
+    <table
+      class="table table-striped"
+      aria-describedby="page-heading"
+      jhiSort
+      [(predicate)]="sortState.predicate"
+      [(ascending)]="sortState.ascending"
+      (sortChange)="load()"
+    >
       <thead>
-        <tr jhiSort [(predicate)]="sortState.predicate" [(ascending)]="sortState.ascending" (sortChange)="navigateToWithComponentValues()">
-          <th scope="col" jhiSortBy="id">
-            <div class="d-flex">
-              <span jhiTranslate="global.field.id">ID</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
+        <tr>
+          <th scope="col" jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
           <th scope="col" jhiSortBy="dataCadastro">
-            <div class="d-flex">
-              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.dataCadastro">Data Cadastro</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
+            <span jhiTranslate="cadastroAlunoApp.cadastroAluno.dataCadastro">Data Cadastro</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="matricula">
-            <div class="d-flex">
-              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.matricula">Matricula</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
+            <span jhiTranslate="cadastroAlunoApp.cadastroAluno.matricula">Matricula</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="grupo">
-            <div class="d-flex">
-              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.grupo">Grupo</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
+            <span jhiTranslate="cadastroAlunoApp.cadastroAluno.grupo">Grupo</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="nome">
-            <div class="d-flex">
-              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.nome">Nome</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
+            <span jhiTranslate="cadastroAlunoApp.cadastroAluno.nome">Nome</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="dn">
-            <div class="d-flex">
-              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.dn">Dn</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
+            <span jhiTranslate="cadastroAlunoApp.cadastroAluno.dn">Dn</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="cep">
-            <div class="d-flex">
-              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.cep">Cep</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
+            <span jhiTranslate="cadastroAlunoApp.cadastroAluno.cep">Cep</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="endereco">
-            <div class="d-flex">
-              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.endereco">Endereco</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
+            <span jhiTranslate="cadastroAlunoApp.cadastroAluno.endereco">Endereco</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="qd">
-            <div class="d-flex">
-              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.qd">Qd</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
+            <span jhiTranslate="cadastroAlunoApp.cadastroAluno.qd">Qd</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col" jhiSortBy="lote">
-            <div class="d-flex">
-              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.lote">Lote</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
+            <span jhiTranslate="cadastroAlunoApp.cadastroAluno.lote">Lote</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th scope="col"></th>
         </tr>

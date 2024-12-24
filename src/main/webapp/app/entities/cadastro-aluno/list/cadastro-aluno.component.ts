@@ -1,12 +1,12 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit, OnDestroy } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
-import { combineLatest, filter, Subscription, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, filter, tap, switchMap } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import CadastroAlunoModule from 'app/shared/shared.module';
+import SharedModule from 'app/shared/shared.module';
 import { SortByDirective, SortDirective, SortService, type SortState, sortStateSignal } from 'app/shared/sort';
-import { FormatMediumDatePipe } from 'app/shared/date';
+import { DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
 import { ItemCountComponent } from 'app/shared/pagination';
 import { FormsModule } from '@angular/forms';
 
@@ -20,7 +20,17 @@ import { CadastroAlunoDeleteDialogComponent } from '../delete/cadastro-aluno-del
   standalone: true,
   selector: 'jhi-cadastro-aluno',
   templateUrl: './cadastro-aluno.component.html',
-  imports: [RouterModule, FormsModule, CadastroAlunoModule, SortDirective, SortByDirective, FormatMediumDatePipe, ItemCountComponent],
+  imports: [
+    RouterModule,
+    FormsModule,
+    SharedModule,
+    SortDirective,
+    SortByDirective,
+    DurationPipe,
+    FormatMediumDatetimePipe,
+    FormatMediumDatePipe,
+    ItemCountComponent,
+  ],
 })
 export class CadastroAlunoComponent implements OnInit, OnDestroy {
   private static readonly NOT_SORTABLE_FIELDS_AFTER_SEARCH = [
@@ -91,14 +101,16 @@ export class CadastroAlunoComponent implements OnInit, OnDestroy {
     'foneEmergencia',
     'relacaoEmergencia',
     'fotoAluno',
+    'fotoAlunoContentType',
     'fotoMae',
+    'fotoMaeContentType',
   ];
 
   cadastroAlunos?: ICadastroAluno[];
   isLoading = false;
   sortState = sortStateSignal({
     predicate: 'id',
-    order: 'asc',
+    ascending: true,
   });
   currentSearch = '';
   itemsPerPage = ITEMS_PER_PAGE;
@@ -133,7 +145,7 @@ export class CadastroAlunoComponent implements OnInit, OnDestroy {
 
   search(query: string): void {
     if (query && CadastroAlunoComponent.NOT_SORTABLE_FIELDS_AFTER_SEARCH.includes(this.sortState().predicate)) {
-      this.sortState.set({ predicate: 'id', order: 'asc' });
+      this.sortState.set({ predicate: 'id', ascending: true });
     }
     this.page = 1;
     this.currentSearch = query;
@@ -179,7 +191,7 @@ export class CadastroAlunoComponent implements OnInit, OnDestroy {
     if (params.has('search') && params.get('search') !== '') {
       this.currentSearch = params.get('search') as string;
       if (CadastroAlunoComponent.NOT_SORTABLE_FIELDS_AFTER_SEARCH.includes(this.sortState().predicate)) {
-        this.sortState.set({ predicate: 'id', order: 'asc' });
+        this.sortState.set({ predicate: 'id', ascending: true });
       }
     }
   }

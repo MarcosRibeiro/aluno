@@ -4,7 +4,7 @@ import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/r
 import { Subscription, combineLatest, filter, tap, switchMap } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import CadastroAlunoModule from 'app/shared/shared.module';
+import SharedModule from 'app/shared/shared.module';
 import { SortByDirective, SortDirective, SortService, type SortState, sortStateSignal } from 'app/shared/sort';
 import { DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
 import { ItemCountComponent } from 'app/shared/pagination';
@@ -23,7 +23,7 @@ import { ResponsavelDeleteDialogComponent } from '../delete/responsavel-delete-d
   imports: [
     RouterModule,
     FormsModule,
-    CadastroAlunoModule,
+    SharedModule,
     SortDirective,
     SortByDirective,
     DurationPipe,
@@ -39,7 +39,7 @@ export class ResponsavelComponent implements OnInit, OnDestroy {
   isLoading = false;
   sortState = sortStateSignal({
     predicate: 'id',
-    order: 'asc',
+    ascending: true,
   });
   currentSearch = '';
   itemsPerPage = ITEMS_PER_PAGE;
@@ -75,7 +75,7 @@ export class ResponsavelComponent implements OnInit, OnDestroy {
   search(query: string): void {
     const { predicate } = this.sortState();
     if (query && predicate && ResponsavelComponent.NOT_SORTABLE_FIELDS_AFTER_SEARCH.includes(predicate)) {
-      this.sortState.set({ predicate: 'id', order: 'asc' });
+      this.sortState.set({ predicate: 'id', ascending: true });
     }
     this.page = 1;
     this.currentSearch = query;
@@ -122,7 +122,7 @@ export class ResponsavelComponent implements OnInit, OnDestroy {
       this.currentSearch = params.get('search') as string;
       const { predicate } = this.sortState();
       if (predicate && ResponsavelComponent.NOT_SORTABLE_FIELDS_AFTER_SEARCH.includes(predicate)) {
-        this.sortState.set({ predicate: 'id', order: 'asc' });
+        this.sortState.set({ predicate: 'id', ascending: true });
       }
     }
   }

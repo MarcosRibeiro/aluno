@@ -1,29 +1,24 @@
 import dayjs from 'dayjs/esm';
-
-export interface IResponsavel {
-  id: number;
-  nome?: string | null;
-  parentesco?: string | null;
-}
-
-export interface IDeslocamento {
-  id: number;
-  nome?: string | null;
-  grau?: string | null;
-}
+import { IResponsavel } from 'app/entities/responsavel/responsavel.model';
+import { IDeslocamento } from 'app/entities/deslocamento/deslocamento.model';
+import { Turno } from 'app/entities/enumerations/turno.model';
+import { SimNao } from 'app/entities/enumerations/sim-nao.model';
+import { Comportamento } from 'app/entities/enumerations/comportamento.model';
+import { TipoResidencia } from 'app/entities/enumerations/tipo-residencia.model';
+import { SituacaoResidencia } from 'app/entities/enumerations/situacao-residencia.model';
 
 export interface ICadastroAluno {
   id: number;
   dataCadastro?: dayjs.Dayjs | null;
-  grupo?: string | null;
   matricula?: string | null;
+  grupo?: string | null;
   nome?: string | null;
   dn?: dayjs.Dayjs | null;
-  endereco?: string | null;
   cep?: string | null;
-  endnumero?: string | null;
+  endereco?: string | null;
   qd?: string | null;
   lote?: string | null;
+  endnumero?: string | null;
   bairro?: string | null;
   municipio?: string | null;
   uf?: string | null;
@@ -60,40 +55,40 @@ export interface ICadastroAluno {
   maeZona?: string | null;
   maeSecao?: string | null;
   maeMunicipio?: string | null;
-  responsaveis?: IResponsavel[] | null;
   nomeEscola?: string | null;
   anoCursando?: string | null;
-  turno?: string | null;
+  turno?: Turno | null;
   mediaEscolar?: number | null;
-  prioritario?: string | null;
+  prioritario?: SimNao | null;
   obs?: string | null;
-  comportamentoCasa?: string | null;
-  comportamentoEscola?: string | null;
-  deficiencia?: string | null;
-  adaptacoes?: string | null;
-  medicacao?: string | null;
+  comportamentoCasa?: Comportamento | null;
+  comportamentoEscola?: Comportamento | null;
+  deficiencia?: SimNao | null;
+  adaptacoes?: SimNao | null;
+  medicacao?: SimNao | null;
   medicacaoDesc?: string | null;
-  alergia?: string | null;
+  alergia?: SimNao | null;
   alergiaDesc?: string | null;
   historicoMedico?: string | null;
   rendaFamiliar?: string | null;
   pessoasTrabalham?: number | null;
   numPessoasLar?: number | null;
-  beneficioSocial?: string | null;
+  beneficioSocial?: SimNao | null;
   beneficios?: string | null;
-  tipoResidencia?: string | null;
+  tipoResidencia?: TipoResidencia | null;
   tipoResidenciaDesc?: string | null;
-  situacaoResidencia?: string | null;
+  situacaoResidencia?: SituacaoResidencia | null;
   situacaoResidenciaDesc?: string | null;
   contatoEmergencia?: string | null;
   foneEmergencia?: string | null;
   relacaoEmergencia?: string | null;
-  deslocamentos?: IDeslocamento[] | null;
   autorizacao?: boolean | null;
   fotoAluno?: string | null;
-  fotoAlunoContentType?: string | null;
+  fotoAlunoContentType?: string | null; // Adicionado para lidar com upload de imagem
   fotoMae?: string | null;
-  fotoMaeContentType?: string | null;
+  fotoMaeContentType?: string | null; // Adicionado para lidar com upload de imagem
+  responsavels?: IResponsavel[] | null; // Relacionamento OneToMany
+  deslocamentos?: IDeslocamento[] | null; // Relacionamento OneToMany
 }
 
 export type NewCadastroAluno = Omit<ICadastroAluno, 'id'> & { id: null };

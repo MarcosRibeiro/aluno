@@ -2,94 +2,51 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 
-import { CadastroAlunoFormService, CadastroAlunoFormGroup } from './cadastro-aluno-form.service';
 import { CadastroAlunoService, ICadastroAluno } from '../service/cadastro-aluno.service';
+import { IResponsavel } from 'app/entities/responsavel/responsavel.model';
+import { ResponsavelService } from 'app/entities/responsavel/service/responsavel.service';
+import { IDeslocamento } from 'app/entities/deslocamento/deslocamento.model';
+import { DeslocamentoService } from 'app/entities/deslocamento/service/deslocamento.service';
 import { AlertError } from 'app/shared/alert/alert-error.model';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
+import { HttpClient } from '@angular/common/http';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'jhi-cadastro-aluno-update',
   templateUrl: './cadastro-aluno-update.component.html',
-  styleUrls: ['./cadastro-aluno-update.component.scss'],
 })
 export class CadastroAlunoUpdateComponent implements OnInit {
   isSaving = false;
   cadastroAluno: ICadastroAluno | null = null;
-  editForm: CadastroAlunoFormGroup;
 
-  private readonly NOT_SORTABLE_FIELDS_AFTER_SEARCH = [
-    'grupo',
-    'nome',
-    'cep',
-    'endereco',
-    'qd',
-    'lote',
-    'endnumero',
-    'bairro',
-    'municipio',
-    'uf',
-    'termo',
-    'cartorio',
-    'naturalidade',
-    'rg',
-    'cpf',
-    'nis',
-    'cras',
-    'filiacaoPai',
-    'paiUf',
-    'paiRg',
-    'paiCpf',
-    'paiNis',
-    'paiTituloEleitor',
-    'paiZona',
-    'filiacaoMae',
-    'maeTelefone',
-    'maeNaturalidade',
-    'maeUf',
-    'maeRg',
-    'maeCpf',
-    'maeZona',
-    'maeSecao',
-    'maeMunicipio',
-    'nomeEscola',
-    'anoCursando',
-    'turno',
-    'comportamentoCasa',
-    'comportamentoEscola',
-    'deficiencia',
-    'adaptacoes',
-    'medicacao',
-    'alergiaDesc',
-    'historicoMedico',
-    'rendaFamiliar',
-    'beneficioSocial',
-    'beneficios',
-    'situacaoResidencia',
-    'situacaoResidenciaDesc',
-    'contatoEmergencia',
-    'fotoAluno',
-  ];
+  responsaveisSharedCollection: IResponsavel[] = [];
+  deslocamentosSharedCollection: IDeslocamento[] = [];
+
+  editForm = this.cadastroAlunoService.cadastroAlunoFormGroup();
 
   constructor(
     protected dataUtils: DataUtils,
     protected eventManager: EventManager,
     protected cadastroAlunoService: CadastroAlunoService,
+    protected responsavelService: ResponsavelService,
+    protected deslocamentoService: DeslocamentoService,
     protected elementRef: ElementRef,
     protected activatedRoute: ActivatedRoute,
-    protected cadastroAlunoFormService: CadastroAlunoFormService, // Injeção do serviço
-  ) {
-    this.editForm = this.cadastroAlunoFormService.createCadastroAlunoFormGroup();
-  }
+    protected http: HttpClient,
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ cadastroAluno }) => {
       this.cadastroAluno = cadastroAluno;
       if (cadastroAluno) {
-        this.cadastroAlunoFormService.resetForm(this.editForm, cadastroAluno);
+        this.updateForm(cadastroAluno);
       }
+
+      this.loadRelationshipsOptions();
     });
   }
 
@@ -124,7 +81,7 @@ export class CadastroAlunoUpdateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
-    const cadastroAluno = this.cadastroAlunoFormService.getCadastroAluno(this.editForm);
+    const cadastroAluno = this.cadastroAlunoService.getCadastroAlunoFromForm(this.editForm);
     if (cadastroAluno.id !== null) {
       this.subscribeToSaveResponse(this.cadastroAlunoService.update(cadastroAluno));
     } else {
@@ -151,133 +108,196 @@ export class CadastroAlunoUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  toggleMedicacaoField(): void {
-    const medicacaoControl = this.editForm.get('medicacao');
-    const medicacaoDescControl = this.editForm.get('medicacaoDesc');
+  protected updateForm(cadastroAluno: ICadastroAluno): void {
+    this.cadastroAluno = cadastroAluno;
+    this.cadastroAlunoService.resetFormGroup(this.editForm, cadastroAluno);
 
-    if (medicacaoControl && medicacaoDescControl) {
-      if (medicacaoControl.value === 'SIM') {
-        medicacaoDescControl.enable();
-      } else {
-        medicacaoDescControl.disable();
-        medicacaoDescControl.reset();
-      }
+    this.responsaveisSharedCollection = this.responsavelService.addResponsavelToCollectionIfMissing<IResponsavel>(
+      this.responsaveisSharedCollection,
+      ...(cadastroAluno.responsavels ?? []),
+    );
+    this.deslocamentosSharedCollection = this.deslocamentoService.addDeslocamentoToCollectionIfMissing<IDeslocamento>(
+      this.deslocamentosSharedCollection,
+      ...(cadastroAluno.deslocamentos ?? []),
+    );
+  }
+
+  protected loadRelationshipsOptions(): void {
+    this.responsavelService
+      .query()
+      .pipe(map((res: HttpResponse<IResponsavel[]>) => res.body ?? []))
+      .pipe(
+        map((responsaveis: IResponsavel[]) =>
+          this.responsavelService.addResponsavelToCollectionIfMissing<IResponsavel>(
+            responsaveis,
+            ...(this.cadastroAluno?.responsavels ?? []),
+          ),
+        ),
+      )
+      .subscribe((responsaveis: IResponsavel[]) => (this.responsaveisSharedCollection = responsaveis));
+
+    this.deslocamentoService
+      .query()
+      .pipe(map((res: HttpResponse<IDeslocamento[]>) => res.body ?? []))
+      .pipe(
+        map((deslocamentos: IDeslocamento[]) =>
+          this.deslocamentoService.addDeslocamentoToCollectionIfMissing<IDeslocamento>(
+            deslocamentos,
+            ...(this.cadastroAluno?.deslocamentos ?? []),
+          ),
+        ),
+      )
+      .subscribe((deslocamentos: IDeslocamento[]) => (this.deslocamentosSharedCollection = deslocamentos));
+  }
+
+  // Funções para alternar campos
+  toggleMedicacaoField(): void {
+    const medicacao = this.editForm.get('medicacao')?.value;
+    if (medicacao === 'SIM') {
+      this.editForm.get('medicacaoDesc')?.enable();
+    } else {
+      this.editForm.get('medicacaoDesc')?.disable();
+      this.editForm.get('medicacaoDesc')?.setValue(null);
     }
   }
 
   toggleAlergiaField(): void {
-    const alergiaControl = this.editForm.get('alergia');
-    const alergiaDescControl = this.editForm.get('alergiaDesc');
-
-    if (alergiaControl && alergiaDescControl) {
-      if (alergiaControl.value === 'SIM') {
-        alergiaDescControl.enable();
-      } else {
-        alergiaDescControl.disable();
-        alergiaDescControl.reset();
-      }
+    const alergia = this.editForm.get('alergia')?.value;
+    if (alergia === 'SIM') {
+      this.editForm.get('alergiaDesc')?.enable();
+    } else {
+      this.editForm.get('alergiaDesc')?.disable();
+      this.editForm.get('alergiaDesc')?.setValue(null);
     }
   }
 
   toggleBeneficiosField(): void {
-    const beneficioSocialControl = this.editForm.get('beneficioSocial');
-    const beneficiosControl = this.editForm.get('beneficios');
-
-    if (beneficioSocialControl && beneficiosControl) {
-      if (beneficioSocialControl.value === 'SIM') {
-        beneficiosControl.enable();
-      } else {
-        beneficiosControl.disable();
-        beneficiosControl.reset();
-      }
+    const beneficioSocial = this.editForm.get('beneficioSocial')?.value;
+    if (beneficioSocial === 'SIM') {
+      this.editForm.get('beneficios')?.enable();
+    } else {
+      this.editForm.get('beneficios')?.disable();
+      this.editForm.get('beneficios')?.setValue(null);
     }
   }
 
+  toggleOutroResidenciaField(): void {
+    const tipoResidencia = this.editForm.get('tipoResidencia')?.value;
+    if (tipoResidencia === 'OUTRO') {
+      this.editForm.get('tipoResidenciaDesc')?.enable();
+    } else {
+      this.editForm.get('tipoResidenciaDesc')?.disable();
+      this.editForm.get('tipoResidenciaDesc')?.setValue(null);
+    }
+  }
+
+  toggleOutraSituacaoField(): void {
+    const situacaoResidencia = this.editForm.get('situacaoResidencia')?.value;
+    if (situacaoResidencia === 'OUTRA') {
+      this.editForm.get('situacaoResidenciaDesc')?.enable();
+    } else {
+      this.editForm.get('situacaoResidenciaDesc')?.disable();
+      this.editForm.get('situacaoResidenciaDesc')?.setValue(null);
+    }
+  }
+
+  // Função para adicionar um novo responsável
   adicionarResponsavel(): void {
-    this.responsaveis.push(this.cadastroAlunoFormService.createResponsavelFormGroup());
+    const responsaveisArray = this.editForm.get('responsaveis') as FormArray;
+    if (responsaveisArray.length < 3) {
+      responsaveisArray.push(
+        new FormGroup({
+          nome: new FormControl(null),
+          parentesco: new FormControl(null),
+        }),
+      );
+    } else {
+      alert('Você pode adicionar no máximo 3 responsáveis.');
+    }
   }
 
+  // Função para remover um responsável
   removerResponsavel(index: number): void {
-    this.responsaveis.removeAt(index);
+    const responsaveisArray = this.editForm.get('responsaveis') as FormArray;
+    responsaveisArray.removeAt(index);
   }
 
+  // Função para adicionar uma nova autorização de deslocamento
   adicionarDeslocamento(): void {
-    this.deslocamentos.push(this.cadastroAlunoFormService.createDeslocamentoFormGroup());
+    const deslocamentosArray = this.editForm.get('deslocamentos') as FormArray;
+    if (deslocamentosArray.length < 3) {
+      deslocamentosArray.push(
+        new FormGroup({
+          nome: new FormControl(null),
+          grau: new FormControl(null),
+        }),
+      );
+    } else {
+      alert('Você pode adicionar no máximo 3 autorizações de deslocamento.');
+    }
   }
 
+  // Função para remover uma autorização de deslocamento
   removerDeslocamento(index: number): void {
-    this.deslocamentos.removeAt(index);
+    const deslocamentosArray = this.editForm.get('deslocamentos') as FormArray;
+    deslocamentosArray.removeAt(index);
   }
 
-  toggleIcon(event: Event, sectionId: string): void {
-    event.stopPropagation(); // Prevent event from bubbling up
-    const icon = document.getElementById('icon-' + sectionId);
-    if (icon) {
-      if (icon.classList.contains('bi-chevron-down')) {
-        icon.classList.remove('bi-chevron-down');
-        icon.classList.add('bi-chevron-up');
-      } else {
-        icon.classList.remove('bi-chevron-up');
-        icon.classList.add('bi-chevron-down');
+  // Função para alternar o ícone de seta no cabeçalho das seções
+  toggleIcon(event: Event): void {
+    const header = (event.target as HTMLElement).closest('.collapse-header');
+    if (header) {
+      const icon = header.querySelector('.bi');
+      if (icon) {
+        icon.classList.toggle('bi-chevron-down');
+        icon.classList.toggle('bi-chevron-up');
       }
     }
   }
 
-  clearInput(fieldName: string): void {
-    const fieldControl = this.editForm.get(fieldName);
-    if (fieldControl) {
-      fieldControl.reset();
-    }
+  // Função para limpar o conteúdo do campo
+  clearInput(formControlName: string): void {
+    this.editForm.get(formControlName)?.setValue(null);
   }
 
+  // Funções para buscar e preencher campos com base no CEP
   clearCepFields(): void {
-    this.editForm.patchValue({
-      endereco: null,
-      qd: null,
-      lote: null,
-      endnumero: null,
-      bairro: null,
-      municipio: null,
-      uf: null,
-    });
+    this.editForm.get('endereco')?.setValue(null);
+    this.editForm.get('bairro')?.setValue(null);
+    this.editForm.get('municipio')?.setValue(null);
+    this.editForm.get('uf')?.setValue(null);
   }
 
   fillCepFields(data: any): void {
-    this.editForm.patchValue({
-      endereco: data.logradouro,
-      bairro: data.bairro,
-      municipio: data.localidade,
-      uf: data.uf,
-    });
+    this.editForm.get('endereco')?.setValue(data.logradouro);
+    this.editForm.get('bairro')?.setValue(data.bairro);
+    this.editForm.get('municipio')?.setValue(data.localidade);
+    this.editForm.get('uf')?.setValue(data.uf);
   }
 
-  searchCep(): void {
-    const cep = this.editForm.get('cep')?.value;
-    if (cep && cep !== '') {
-      this.cadastroAlunoService.buscarCEP(cep).subscribe({
-        next: res => {
-          if (res.body) {
-            this.fillCepFields(res.body);
+  searchCep(cep: string): void {
+    this.clearCepFields();
+
+    if (cep !== '') {
+      this.http.get(`https://viacep.com.br/ws/${cep}/json/`).subscribe({
+        next: (data: any) => {
+          if (!data.erro) {
+            this.fillCepFields(data);
           } else {
-            this.clearCepFields();
+            alert('CEP não encontrado.');
           }
         },
-        error: () => this.clearCepFields(),
+        error: () => {
+          alert('Erro ao buscar CEP.');
+        },
       });
-    } else {
-      this.clearCepFields();
     }
   }
 
   onCepBlur(): void {
-    this.searchCep();
-  }
-
-  get responsaveis() {
-    return this.cadastroAlunoFormService.getResponsaveis(this.editForm);
-  }
-
-  get deslocamentos() {
-    return this.cadastroAlunoFormService.getDeslocamentos(this.editForm);
+    const cep = this.editForm.get('cep')?.value?.replace(/\D/g, '');
+    if (cep) {
+      this.searchCep(cep);
+    }
   }
 }

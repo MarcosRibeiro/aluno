@@ -2,20 +2,23 @@ import { Routes } from '@angular/router';
 
 import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { ASC } from 'app/config/navigation.constants';
+import { CadastroAlunoComponent } from './list/cadastro-aluno.component';
+import { CadastroAlunoDetailComponent } from './detail/cadastro-aluno-detail.component';
+import { CadastroAlunoUpdateComponent } from './update/cadastro-aluno-update.component';
 import CadastroAlunoResolve from './route/cadastro-aluno-routing-resolve.service';
 
 const cadastroAlunoRoute: Routes = [
   {
     path: '',
-    loadComponent: () => import('./list/cadastro-aluno.component').then(m => m.CadastroAlunoComponent),
+    component: CadastroAlunoComponent,
     data: {
-      defaultSort: `id,${ASC}`,
+      defaultSort: 'id,' + ASC,
     },
     canActivate: [UserRouteAccessService],
   },
   {
     path: ':id/view',
-    loadComponent: () => import('./detail/cadastro-aluno-detail.component').then(m => m.CadastroAlunoDetailComponent),
+    component: CadastroAlunoDetailComponent,
     resolve: {
       cadastroAluno: CadastroAlunoResolve,
     },
@@ -23,7 +26,7 @@ const cadastroAlunoRoute: Routes = [
   },
   {
     path: 'new',
-    loadComponent: () => import('./update/cadastro-aluno-update.component').then(m => m.CadastroAlunoUpdateComponent),
+    component: CadastroAlunoUpdateComponent,
     resolve: {
       cadastroAluno: CadastroAlunoResolve,
     },
@@ -31,7 +34,7 @@ const cadastroAlunoRoute: Routes = [
   },
   {
     path: ':id/edit',
-    loadComponent: () => import('./update/cadastro-aluno-update.component').then(m => m.CadastroAlunoUpdateComponent),
+    component: CadastroAlunoUpdateComponent,
     resolve: {
       cadastroAluno: CadastroAlunoResolve,
     },
