@@ -1,0 +1,178 @@
+<div>
+  <h2 id="page-heading" data-cy="CadastroAlunoHeading">
+    <span jhiTranslate="cadastroAlunoApp.cadastroAluno.home.title">Cadastro Alunos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="cadastroAlunoApp.cadastroAluno.home.refreshListLabel">Atualizar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-cadastro-aluno"
+        [routerLink]="['/cadastro-aluno/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span class="hidden-sm-down" jhiTranslate="cadastroAlunoApp.cadastroAluno.home.createLabel"> Criar novo Cadastro Aluno </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <form name="searchForm" class="row row-cols-sm-auto align-items-center">
+    <div class="col-sm-12">
+      <div class="input-group w-100 mt-3">
+        <label class="visually-hidden" for="currentSearch" jhiTranslate="cadastroAlunoApp.cadastroAluno.home.search"
+          >Pesquisar por Cadastro Aluno</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="currentSearch"
+          id="currentSearch"
+          name="currentSearch"
+          placeholder="{{ 'cadastroAlunoApp.cadastroAluno.home.search' | translate }}"
+        />
+
+        <button class="btn btn-info" (click)="search(currentSearch)">
+          <fa-icon icon="search"></fa-icon>
+        </button>
+
+        <button class="btn btn-danger" (click)="search('')" *ngIf="currentSearch">
+          <fa-icon icon="xmark"></fa-icon>
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="cadastroAlunos?.length === 0">
+    <span jhiTranslate="cadastroAlunoApp.cadastroAluno.home.notFound">Nenhum Cadastro Aluno encontrado</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="cadastroAlunos && cadastroAlunos.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="sortState.predicate" [(ascending)]="sortState.ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="global.field.id">ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="dataCadastro">
+            <div class="d-flex">
+              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.dataCadastro">Data Cadastro</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="matricula">
+            <div class="d-flex">
+              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.matricula">Matricula</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="grupo">
+            <div class="d-flex">
+              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.grupo">Grupo</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="nome">
+            <div class="d-flex">
+              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.nome">Nome</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="dn">
+            <div class="d-flex">
+              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.dn">Dn</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="cep">
+            <div class="d-flex">
+              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.cep">Cep</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="endereco">
+            <div class="d-flex">
+              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.endereco">Endereco</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="qd">
+            <div class="d-flex">
+              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.qd">Qd</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lote">
+            <div class="d-flex">
+              <span jhiTranslate="cadastroAlunoApp.cadastroAluno.lote">Lote</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cadastroAluno of cadastroAlunos; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/cadastro-aluno', cadastroAluno.id, 'view']">{{ cadastroAluno.id }}</a>
+          </td>
+          <td>{{ cadastroAluno.dataCadastro | formatMediumDate }}</td>
+          <td>{{ cadastroAluno.matricula }}</td>
+          <td>{{ cadastroAluno.grupo }}</td>
+          <td>{{ cadastroAluno.nome }}</td>
+          <td>{{ cadastroAluno.dn | formatMediumDate }}</td>
+          <td>{{ cadastroAluno.cep }}</td>
+          <td>{{ cadastroAluno.endereco }}</td>
+          <td>{{ cadastroAluno.qd }}</td>
+          <td>{{ cadastroAluno.lote }}</td>
+          <td class="text-end">
+            <div class="btn-group">
+              <a [routerLink]="['/cadastro-aluno', cadastroAluno.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Visualizar</span>
+              </a>
+
+              <a [routerLink]="['/cadastro-aluno', cadastroAluno.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+              </a>
+
+              <button type="submit" (click)="delete(cadastroAluno)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Excluir</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="cadastroAlunos && cadastroAlunos.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject, signal } from '@angular/core';
 import { combineLatest } from 'rxjs';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 import { MetricsService } from './metrics.service';
 import { Metrics, Thread } from './metrics.model';
 import { JvmMemoryComponent } from './blocks/jvm-memory/jvm-memory.component';
@@ -20,7 +20,7 @@ import { MetricsSystemComponent } from './blocks/metrics-system/metrics-system.c
   templateUrl: './metrics.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    SharedModule,
+    CadastroAlunoModule,
     JvmMemoryComponent,
     JvmThreadsComponent,
     MetricsCacheComponent,

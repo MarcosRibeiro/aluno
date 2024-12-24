@@ -1,11 +1,11 @@
 import { Component, ElementRef, Input, Renderer2, inject } from '@angular/core';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 
 @Component({
   standalone: true,
   selector: 'jhi-password-strength-bar',
-  imports: [SharedModule],
+  imports: [CadastroAlunoModule],
   templateUrl: './password-strength-bar.component.html',
   styleUrl: './password-strength-bar.component.scss',
 })

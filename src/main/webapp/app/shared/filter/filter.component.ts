@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
-import SharedModule from '../shared.module';
+import CadastroAlunoModule from '../shared.module';
 import { IFilterOptions } from './filter.model';
 
 @Component({
   standalone: true,
   selector: 'jhi-filter',
-  imports: [SharedModule],
+  imports: [CadastroAlunoModule],
   templateUrl: './filter.component.html',
 })
 export default class FilterComponent {

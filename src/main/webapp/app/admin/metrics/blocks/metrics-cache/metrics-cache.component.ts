@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 import { CacheMetrics } from 'app/admin/metrics/metrics.model';
 import { filterNaN } from 'app/core/util/operators';
 
@@ -9,7 +9,7 @@ import { filterNaN } from 'app/core/util/operators';
   selector: 'jhi-metrics-cache',
   templateUrl: './metrics-cache.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SharedModule],
+  imports: [CadastroAlunoModule],
 })
 export class MetricsCacheComponent {
   /**

@@ -1,0 +1,1219 @@
+<div class="d-flex justify-content-center">
+  <div class="col-10">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <div class="container">
+        <!-- Título e Foto -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="foto-container">
+              <label for="foto-aluno" class="foto-upload">
+                <img
+                  [src]="
+                    cadastroAluno?.fotoAluno
+                      ? 'data:' + cadastroAluno.fotoAlunoContentType + ';base64,' + cadastroAluno.fotoAluno
+                      : 'placeholder-foto.png'
+                  "
+                  alt="Foto 3x4 Aluno"
+                  id="foto-preview-aluno"
+                />
+                <input type="file" id="foto-aluno" name="foto-aluno" accept="image/*" (change)="setFileData($event, 'fotoAluno', true)" />
+              </label>
+              <p class="text-center">Foto do Aluno</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="foto-container">
+              <label for="foto-mae" class="foto-upload">
+                <img
+                  [src]="
+                    cadastroAluno?.fotoMae
+                      ? 'data:' + cadastroAluno.fotoMaeContentType + ';base64,' + cadastroAluno.fotoMae
+                      : 'placeholder-foto.png'
+                  "
+                  alt="Foto 3x4 Mãe"
+                  id="foto-preview-mae"
+                />
+                <input type="file" id="foto-mae" name="foto-mae" accept="image/*" (change)="setFileData($event, 'fotoMae', true)" />
+              </label>
+              <p class="text-center">Foto da Mãe</p>
+            </div>
+          </div>
+        </div>
+
+        <h2>MATRÍCULA/AUTORIZAÇÃO</h2>
+        <hr />
+
+        <!-- Dados do Aluno -->
+        <div
+          class="collapse-header full-width"
+          data-bs-toggle="collapse"
+          href="#dados-aluno"
+          role="button"
+          aria-expanded="true"
+          aria-controls="dados-aluno"
+          (click)="toggleIcon($event, 'dados-aluno')"
+        >
+          <h3>Dados do Aluno</h3>
+          <i class="bi bi-chevron-down" id="icon-dados-aluno"></i>
+        </div>
+        <div class="collapse show" id="dados-aluno">
+          <div class="row">
+            <div class="form-group col-md-4 required">
+              <label for="dataCadastro">Data do Cadastro:</label>
+              <input type="text" class="form-control" id="dataCadastro" name="dataCadastro" formControlName="dataCadastro" />
+              <div
+                *ngIf="
+                  editForm.get('dataCadastro')!.invalid && (editForm.get('dataCadastro')!.dirty || editForm.get('dataCadastro')!.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('dataCadastro')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('dataCadastro')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="matricula">Matrícula Nº:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="matricula"
+                name="matricula"
+                placeholder="Número da Matrícula"
+                formControlName="matricula"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('matricula')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="grupo">Grupo:</label>
+              <input type="text" class="form-control" id="grupo" name="grupo" placeholder="Nome do Grupo" formControlName="grupo" />
+              <i class="bi bi-x form-clear" (click)="clearInput('grupo')"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-8 required">
+              <label for="nome">Nome Completo:</label>
+              <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome completo" formControlName="nome" />
+              <div
+                *ngIf="editForm.get('nome')!.invalid && (editForm.get('nome')!.dirty || editForm.get('nome')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('nome')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('nome')"></i>
+            </div>
+            <div class="form-group col-md-4 required">
+              <label for="dn">Data de Nascimento:</label>
+              <input type="date" class="form-control" id="dn" name="dn" formControlName="dn" />
+              <div *ngIf="editForm.get('dn')!.invalid && (editForm.get('dn')!.dirty || editForm.get('dn')!.touched)" class="error-message">
+                <small *ngIf="editForm.get('dn')?.errors?.required">Este campo é obrigatório.</small>
+                <small *ngIf="editForm.get('dn')?.errors?.idadeMinima">Idade mínima de 5 anos.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('dn')"></i>
+            </div>
+          </div>
+
+          <!-- CAMPOS DE ENDEREÇO -->
+          <div class="row">
+            <div class="form-group col-md-2 required">
+              <label for="cep">CEP:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="cep"
+                name="cep"
+                placeholder="Somente números"
+                formControlName="cep"
+                (blur)="onCepBlur()"
+              />
+              <div
+                *ngIf="editForm.get('cep')!.invalid && (editForm.get('cep')!.dirty || editForm.get('cep')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('cep')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('cep')"></i>
+            </div>
+
+            <div class="form-group col-md-4 required">
+              <label for="endereco">Endereço:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="endereco"
+                name="endereco"
+                placeholder="Digite o endereço completo"
+                formControlName="endereco"
+              />
+              <div
+                *ngIf="editForm.get('endereco')!.invalid && (editForm.get('endereco')!.dirty || editForm.get('endereco')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('endereco')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('endereco')"></i>
+            </div>
+
+            <div class="form-group col-md-2">
+              <label for="qd">QD:</label>
+              <input type="text" class="form-control" id="qd" name="qd" placeholder="Digite a quadra" formControlName="qd" />
+              <i class="bi bi-x form-clear" (click)="clearInput('qd')"></i>
+            </div>
+
+            <div class="form-group col-md-2">
+              <label for="lote">Lote:</label>
+              <input type="text" class="form-control" id="lote" name="lote" placeholder="Digite o lote" formControlName="lote" />
+              <i class="bi bi-x form-clear" (click)="clearInput('lote')"></i>
+            </div>
+
+            <div class="form-group col-md-1">
+              <label for="endnumero">Nº:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="endnumero"
+                name="endnumero"
+                placeholder="Digite o número"
+                formControlName="endnumero"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('endnumero')"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-4">
+              <label for="bairro">Bairro:</label>
+              <input type="text" class="form-control" id="bairro" name="bairro" placeholder="Nome do bairro" formControlName="bairro" />
+              <i class="bi bi-x form-clear" (click)="clearInput('bairro')"></i>
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="municipio">Municipio:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="municipio"
+                name="municipio"
+                placeholder="Nome da municipio"
+                formControlName="municipio"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('municipio')"></i>
+            </div>
+
+            <div class="form-group col-md-4">
+              <label for="uf">UF:</label>
+              <input type="text" class="form-control" id="uf" name="uf" placeholder="Nome do uf" formControlName="uf" />
+              <i class="bi bi-x form-clear" (click)="clearInput('uf')"></i>
+            </div>
+          </div>
+          <!-- FIM DE CAMPOS DE ENDEREÇO -->
+
+          <div class="row">
+            <div class="form-group col-md-4 required">
+              <label for="fone">Telefone:</label>
+              <input type="text" class="form-control" id="fone" name="fone" placeholder="(DDD) Número" formControlName="fone" />
+              <div
+                *ngIf="editForm.get('fone')!.invalid && (editForm.get('fone')!.dirty || editForm.get('fone')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('fone')?.errors?.required">Este campo é obrigatório.</small>
+                <small *ngIf="editForm.get('fone')?.errors?.telefoneInvalido">Telefone inválido.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('fone')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="certidao">Certidão de Nascimento:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="certidao"
+                name="certidao"
+                placeholder="Número da Certidão"
+                formControlName="certidao"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('certidao')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="termo">Termo da Certidão:</label>
+              <input type="text" class="form-control" id="termo" name="termo" placeholder="Termo da Certidão" formControlName="termo" />
+              <i class="bi bi-x form-clear" (click)="clearInput('termo')"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-4">
+              <label for="cartorio">Cartório:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="cartorio"
+                name="cartorio"
+                placeholder="Nome do Cartório"
+                formControlName="cartorio"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('cartorio')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="naturalidade">Naturalidade:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="naturalidade"
+                name="naturalidade"
+                placeholder="Cidade de nascimento"
+                formControlName="naturalidade"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('naturalidade')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="rg">RG:</label>
+              <input type="text" class="form-control" id="rg" name="rg" placeholder="Número do RG" formControlName="rg" />
+              <i class="bi bi-x form-clear" (click)="clearInput('rg')"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-4 required">
+              <label for="cpf">CPF:</label>
+              <input type="text" class="form-control" id="cpf" name="cpf" placeholder="Número do CPF" formControlName="cpf" />
+              <div
+                *ngIf="editForm.get('cpf')!.invalid && (editForm.get('cpf')!.dirty || editForm.get('cpf')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('cpf')?.errors?.required">Este campo é obrigatório.</small>
+                <small *ngIf="editForm.get('cpf')?.errors?.cpfInvalido">CPF inválido.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('cpf')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="nis">NIS do Aluno:</label>
+              <input type="text" class="form-control" id="nis" name="nis" placeholder="Número do NIS" formControlName="nis" />
+              <i class="bi bi-x form-clear" (click)="clearInput('nis')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="cras">CRAS de Referência:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="cras"
+                name="cras"
+                placeholder="Nome do CRAS de referência"
+                formControlName="cras"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('cras')"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filiação -->
+        <div
+          class="collapse-header full-width"
+          data-bs-toggle="collapse"
+          href="#filiacao"
+          role="button"
+          aria-expanded="true"
+          aria-controls="filiacao"
+          (click)="toggleIcon($event, 'filiacao')"
+        >
+          <h3>Filiação</h3>
+          <i class="bi bi-chevron-down" id="icon-filiacao"></i>
+        </div>
+        <div class="collapse show" id="filiacao">
+          <div class="row">
+            <!-- Pai -->
+            <div class="form-group col-md-6 required">
+              <label for="filiacaoPai">Filiação - Pai:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="filiacaoPai"
+                name="filiacaoPai"
+                placeholder="Nome do pai"
+                formControlName="filiacaoPai"
+              />
+              <div
+                *ngIf="editForm.get('filiacaoPai')!.invalid && (editForm.get('filiacaoPai')!.dirty || editForm.get('filiacaoPai')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('filiacaoPai')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('filiacaoPai')"></i>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="paiTelefone">Telefone:</label>
+              <input
+                type="tel"
+                class="form-control"
+                id="paiTelefone"
+                name="paiTelefone"
+                placeholder="Telefone"
+                formControlName="paiTelefone"
+              />
+              <div
+                *ngIf="editForm.get('paiTelefone')!.invalid && (editForm.get('paiTelefone')!.dirty || editForm.get('paiTelefone')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('paiTelefone')?.errors?.telefoneInvalido">Telefone inválido.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('paiTelefone')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="paiNaturalidade">Naturalidade:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="paiNaturalidade"
+                name="paiNaturalidade"
+                placeholder="Naturalidade"
+                formControlName="paiNaturalidade"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('paiNaturalidade')"></i>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="paiUf">UF:</label>
+              <input type="text" class="form-control" id="paiUf" name="paiUf" placeholder="UF" formControlName="paiUf" />
+              <i class="bi bi-x form-clear" (click)="clearInput('paiUf')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="paiRg">RG:</label>
+              <input type="text" class="form-control" id="paiRg" name="paiRg" placeholder="RG" formControlName="paiRg" />
+              <i class="bi bi-x form-clear" (click)="clearInput('paiRg')"></i>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="paiDataNascimento">Data de Nascimento:</label>
+              <input type="date" class="form-control" id="paiDataNascimento" name="paiDataNascimento" formControlName="paiDataNascimento" />
+              <i class="bi bi-x form-clear" (click)="clearInput('paiDataNascimento')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="paiCpf">CPF:</label>
+              <input type="text" class="form-control" id="paiCpf" name="paiCpf" placeholder="CPF" formControlName="paiCpf" />
+              <div
+                *ngIf="editForm.get('paiCpf')!.invalid && (editForm.get('paiCpf')!.dirty || editForm.get('paiCpf')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('paiCpf')?.errors?.cpfInvalido">CPF inválido.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('paiCpf')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="paiNis">NIS:</label>
+              <input type="text" class="form-control" id="paiNis" name="paiNis" placeholder="NIS" formControlName="paiNis" />
+              <i class="bi bi-x form-clear" (click)="clearInput('paiNis')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="paiTituloEleitor">Título de Eleitor:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="paiTituloEleitor"
+                name="paiTituloEleitor"
+                placeholder="Título de Eleitor"
+                formControlName="paiTituloEleitor"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('paiTituloEleitor')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="paiZona">Zona:</label>
+              <input type="text" class="form-control" id="paiZona" name="paiZona" placeholder="Zona" formControlName="paiZona" />
+              <i class="bi bi-x form-clear" (click)="clearInput('paiZona')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="paiSecao">Seção:</label>
+              <input type="text" class="form-control" id="paiSecao" name="paiSecao" placeholder="Seção" formControlName="paiSecao" />
+              <i class="bi bi-x form-clear" (click)="clearInput('paiSecao')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="paiMunicipio">Município:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="paiMunicipio"
+                name="paiMunicipio"
+                placeholder="Município"
+                formControlName="paiMunicipio"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('paiMunicipio')"></i>
+            </div>
+
+            <!-- Mãe -->
+            <div class="form-group col-md-6 required">
+              <label for="filiacaoMae">Filiação - Mãe:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="filiacaoMae"
+                name="filiacaoMae"
+                placeholder="Nome da mãe"
+                formControlName="filiacaoMae"
+              />
+              <div
+                *ngIf="editForm.get('filiacaoMae')!.invalid && (editForm.get('filiacaoMae')!.dirty || editForm.get('filiacaoMae')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('filiacaoMae')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('filiacaoMae')"></i>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="maeTelefone">Telefone:</label>
+              <input
+                type="tel"
+                class="form-control"
+                id="maeTelefone"
+                name="maeTelefone"
+                placeholder="Telefone"
+                formControlName="maeTelefone"
+              />
+              <div
+                *ngIf="editForm.get('maeTelefone')!.invalid && (editForm.get('maeTelefone')!.dirty || editForm.get('maeTelefone')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('maeTelefone')?.errors?.telefoneInvalido">Telefone inválido.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('maeTelefone')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="maeNaturalidade">Naturalidade:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="maeNaturalidade"
+                name="maeNaturalidade"
+                placeholder="Naturalidade"
+                formControlName="maeNaturalidade"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('maeNaturalidade')"></i>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="maeUf">UF:</label>
+              <input type="text" class="form-control" id="maeUf" name="maeUf" placeholder="UF" formControlName="maeUf" />
+              <i class="bi bi-x form-clear" (click)="clearInput('maeUf')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="maeRg">RG:</label>
+              <input type="text" class="form-control" id="maeRg" name="maeRg" placeholder="RG" formControlName="maeRg" />
+              <i class="bi bi-x form-clear" (click)="clearInput('maeRg')"></i>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="maeDataNascimento">Data de Nascimento:</label>
+              <input type="date" class="form-control" id="maeDataNascimento" name="maeDataNascimento" formControlName="maeDataNascimento" />
+              <i class="bi bi-x form-clear" (click)="clearInput('maeDataNascimento')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="maeCpf">CPF:</label>
+              <input type="text" class="form-control" id="maeCpf" name="maeCpf" placeholder="CPF" formControlName="maeCpf" />
+              <div
+                *ngIf="editForm.get('maeCpf')!.invalid && (editForm.get('maeCpf')!.dirty || editForm.get('maeCpf')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('maeCpf')?.errors?.cpfInvalido">CPF inválido.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('maeCpf')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="maeNis">NIS:</label>
+              <input type="text" class="form-control" id="maeNis" name="maeNis" placeholder="NIS" formControlName="maeNis" />
+              <i class="bi bi-x form-clear" (click)="clearInput('maeNis')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="maeTituloEleitor">Título de Eleitor:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="maeTituloEleitor"
+                name="maeTituloEleitor"
+                placeholder="Título de Eleitor"
+                formControlName="maeTituloEleitor"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('maeTituloEleitor')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="maeZona">Zona:</label>
+              <input type="text" class="form-control" id="maeZona" name="maeZona" placeholder="Zona" formControlName="maeZona" />
+              <i class="bi bi-x form-clear" (click)="clearInput('maeZona')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="maeSecao">Seção:</label>
+              <input type="text" class="form-control" id="maeSecao" name="maeSecao" placeholder="Seção" formControlName="maeSecao" />
+              <i class="bi bi-x form-clear" (click)="clearInput('maeSecao')"></i>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="maeMunicipio">Município:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="maeMunicipio"
+                name="maeMunicipio"
+                placeholder="Município"
+                formControlName="maeMunicipio"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('maeMunicipio')"></i>
+            </div>
+          </div>
+          <div formArrayName="responsaveis">
+            <div *ngFor="let responsavel of responsaveis.controls; let i = index" [formGroupName]="i">
+              <div class="row mt-2 responsavel-row">
+                <div class="form-group col-md-5">
+                  <label for="responsavel-nome-{{ i }}">Nome:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="responsavel-nome-{{ i }}"
+                    name="responsavel-nome"
+                    placeholder="Nome do responsável"
+                    formControlName="nome"
+                  />
+                  <i class="bi bi-x form-clear" (click)="clearInput('responsaveis.' + i + '.nome')"></i>
+                </div>
+                <div class="form-group col-md-5">
+                  <label for="responsavel-parentesco-{{ i }}">Parentesco:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="responsavel-parentesco-{{ i }}"
+                    name="responsavel-parentesco"
+                    placeholder="Parentesco"
+                    formControlName="parentesco"
+                  />
+                  <i class="bi bi-x form-clear" (click)="clearInput('responsaveis.' + i + '.parentesco')"></i>
+                </div>
+                <div class="form-group col-md-2">
+                  <label>Remover:</label>
+                  <button type="button" class="btn btn-danger form-control" (click)="removerResponsavel(i)">X</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary" (click)="adicionarResponsavel()">Adicionar Responsável</button>
+        </div>
+
+        <!-- Informações Escolares -->
+        <div
+          class="collapse-header full-width"
+          data-bs-toggle="collapse"
+          href="#informacoes-escolares"
+          role="button"
+          aria-expanded="true"
+          aria-controls="informacoes-escolares"
+          (click)="toggleIcon($event, 'informacoes-escolares')"
+        >
+          <h3>Informações Escolares</h3>
+          <i class="bi bi-chevron-down" id="icon-informacoes-escolares"></i>
+        </div>
+        <div class="collapse show" id="informacoes-escolares">
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="nomeEscola">Nome da Escola:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nomeEscola"
+                name="nomeEscola"
+                placeholder="Nome da escola"
+                formControlName="nomeEscola"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('nomeEscola')"></i>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="anoCursando">Ano Cursando:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="anoCursando"
+                name="anoCursando"
+                placeholder="Ano que está cursando"
+                formControlName="anoCursando"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('anoCursando')"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6 required">
+              <label for="turno">Turno:</label>
+              <select class="form-select" id="turno" name="turno" formControlName="turno">
+                <option value="" disabled selected>Selecione</option>
+                <option value="MATUTINO">Matutino</option>
+                <option value="VESPERTINO">Vespertino</option>
+                <option value="NOTURNO">Noturno</option>
+              </select>
+              <div
+                *ngIf="editForm.get('turno')!.invalid && (editForm.get('turno')!.dirty || editForm.get('turno')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('turno')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="mediaEscolar">Média Escolar:</label>
+              <input
+                type="number"
+                class="form-control"
+                id="mediaEscolar"
+                name="mediaEscolar"
+                placeholder="Média escolar"
+                formControlName="mediaEscolar"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('mediaEscolar')"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6 required">
+              <label for="prioritario">Prioritário(a)?</label>
+              <select class="form-select" id="prioritario" name="prioritario" formControlName="prioritario">
+                <option value="" disabled selected>Selecione</option>
+                <option value="SIM">Sim</option>
+                <option value="NAO">Não</option>
+              </select>
+              <div
+                *ngIf="editForm.get('prioritario')!.invalid && (editForm.get('prioritario')!.dirty || editForm.get('prioritario')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('prioritario')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="obs">Observações:</label>
+              <textarea class="form-control" id="obs" name="obs" placeholder="Observações" formControlName="obs"></textarea>
+              <i class="bi bi-x form-clear" (click)="clearInput('obs')"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comportamento do Aluno -->
+        <div
+          class="collapse-header full-width"
+          data-bs-toggle="collapse"
+          href="#comportamento-aluno"
+          role="button"
+          aria-expanded="true"
+          aria-controls="comportamento-aluno"
+          (click)="toggleIcon($event, 'comportamento-aluno')"
+        >
+          <h3>Comportamento do Aluno</h3>
+          <i class="bi bi-chevron-down" id="icon-comportamento-aluno"></i>
+        </div>
+        <div class="collapse show" id="comportamento-aluno">
+          <div class="row">
+            <div class="form-group col-md-6 required">
+              <label for="comportamentoCasa">Comportamento em Casa:</label>
+              <select class="form-select" id="comportamentoCasa" name="comportamentoCasa" formControlName="comportamentoCasa">
+                <option value="" disabled selected>Selecione</option>
+                <option value="TRANQUILO">Tranquilo</option>
+                <option value="AGITADO">Agitado</option>
+              </select>
+              <div
+                *ngIf="
+                  editForm.get('comportamentoCasa')!.invalid &&
+                  (editForm.get('comportamentoCasa')!.dirty || editForm.get('comportamentoCasa')!.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('comportamentoCasa')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+            </div>
+            <div class="form-group col-md-6 required">
+              <label for="comportamentoEscola">Comportamento na Escola:</label>
+              <select class="form-select" id="comportamentoEscola" name="comportamentoEscola" formControlName="comportamentoEscola">
+                <option value="" disabled selected>Selecione</option>
+                <option value="TRANQUILO">Tranquilo</option>
+                <option value="AGITADO">Agitado</option>
+              </select>
+              <div
+                *ngIf="
+                  editForm.get('comportamentoEscola')!.invalid &&
+                  (editForm.get('comportamentoEscola')!.dirty || editForm.get('comportamentoEscola')!.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('comportamentoEscola')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Saúde e Necessidades Especiais -->
+        <div
+          class="collapse-header full-width"
+          data-bs-toggle="collapse"
+          href="#saude-necessidades"
+          role="button"
+          aria-expanded="true"
+          aria-controls="saude-necessidades"
+          (click)="toggleIcon($event, 'saude-necessidades')"
+        >
+          <h3>Saúde e Necessidades Especiais</h3>
+          <i class="bi bi-chevron-down" id="icon-saude-necessidades"></i>
+        </div>
+        <div class="collapse show" id="saude-necessidades">
+          <div class="row">
+            <div class="form-group col-md-6 required">
+              <label for="deficiencia">Possui Deficiência?</label>
+              <select class="form-select" id="deficiencia" name="deficiencia" formControlName="deficiencia">
+                <option value="" disabled selected>Selecione</option>
+                <option value="SIM">Sim</option>
+                <option value="NAO">Não</option>
+              </select>
+              <div
+                *ngIf="editForm.get('deficiencia')!.invalid && (editForm.get('deficiencia')!.dirty || editForm.get('deficiencia')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('deficiencia')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+            </div>
+            <div class="form-group col-md-6 required">
+              <label for="adaptacoes">Necessita de Adaptações?</label>
+              <select class="form-select" id="adaptacoes" name="adaptacoes" formControlName="adaptacoes">
+                <option value="" disabled selected>Selecione</option>
+                <option value="SIM">Sim</option>
+                <option value="NAO">Não</option>
+              </select>
+              <div
+                *ngIf="editForm.get('adaptacoes')!.invalid && (editForm.get('adaptacoes')!.dirty || editForm.get('adaptacoes')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('adaptacoes')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6 required">
+              <label for="medicacao">Medicação:</label>
+              <select class="form-select" id="medicacao" name="medicacao" formControlName="medicacao" (change)="toggleMedicacaoField()">
+                <option value="" disabled selected>Selecione</option>
+                <option value="SIM">Sim</option>
+                <option value="NAO">Não</option>
+              </select>
+              <div
+                *ngIf="editForm.get('medicacao')!.invalid && (editForm.get('medicacao')!.dirty || editForm.get('medicacao')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('medicacao')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+            </div>
+            <div class="form-group col-md-6 required" *ngIf="editForm.get('medicacao')?.value === 'SIM'">
+              <label for="medicacaoDesc">Descreva a Medicação:</label>
+              <textarea
+                class="form-control"
+                id="medicacaoDesc"
+                name="medicacaoDesc"
+                placeholder="Descreva a medicação"
+                formControlName="medicacaoDesc"
+              ></textarea>
+              <div
+                *ngIf="
+                  editForm.get('medicacaoDesc')!.invalid && (editForm.get('medicacaoDesc')!.dirty || editForm.get('medicacaoDesc')!.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('medicacaoDesc')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('medicacaoDesc')"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6 required">
+              <label for="alergia">Alergia:</label>
+              <select class="form-select" id="alergia" name="alergia" formControlName="alergia" (change)="toggleAlergiaField()">
+                <option value="" disabled selected>Selecione</option>
+                <option value="SIM">Sim</option>
+                <option value="NAO">Não</option>
+              </select>
+              <div
+                *ngIf="editForm.get('alergia')!.invalid && (editForm.get('alergia')!.dirty || editForm.get('alergia')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('alergia')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+            </div>
+            <div class="form-group col-md-6 required" *ngIf="editForm.get('alergia')?.value === 'SIM'">
+              <label for="alergiaDesc">Descreva a Alergia:</label>
+              <textarea
+                class="form-control"
+                id="alergiaDesc"
+                name="alergiaDesc"
+                placeholder="Descreva a alergia"
+                formControlName="alergiaDesc"
+              ></textarea>
+              <div
+                *ngIf="editForm.get('alergiaDesc')!.invalid && (editForm.get('alergiaDesc')!.dirty || editForm.get('alergiaDesc')!.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('alergiaDesc')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('alergiaDesc')"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label for="historicoMedico">Histórico Médico:</label>
+              <textarea
+                class="form-control"
+                id="historicoMedico"
+                name="historicoMedico"
+                placeholder="Descreva o histórico médico relevante"
+                formControlName="historicoMedico"
+              ></textarea>
+              <i class="bi bi-x form-clear" (click)="clearInput('historicoMedico')"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações Socioeconômicas -->
+        <div
+          class="collapse-header full-width"
+          data-bs-toggle="collapse"
+          href="#informacoes-socioeconomicas"
+          role="button"
+          aria-expanded="true"
+          aria-controls="informacoes-socioeconomicas"
+          (click)="toggleIcon($event, 'informacoes-socioeconomicas')"
+        >
+          <h3>Informações Socioeconômicas</h3>
+          <i class="bi bi-chevron-down" id="icon-informacoes-socioeconomicas"></i>
+        </div>
+        <div class="collapse show" id="informacoes-socioeconomicas">
+          <div class="row">
+            <!-- Renda Familiar Mensal -->
+            <div class="form-group col-md-4 required">
+              <label for="rendaFamiliar">Renda Familiar Mensal:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="rendaFamiliar"
+                name="rendaFamiliar"
+                placeholder="Renda mensal"
+                formControlName="rendaFamiliar"
+              />
+              <div
+                *ngIf="
+                  editForm.get('rendaFamiliar')?.invalid && (editForm.get('rendaFamiliar')?.dirty || editForm.get('rendaFamiliar')?.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('rendaFamiliar')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('rendaFamiliar')"></i>
+            </div>
+
+            <!-- Nº de Pessoas que Trabalham -->
+            <div class="form-group col-md-4 required">
+              <label for="pessoasTrabalham">Nº de Pessoas que Trabalham:</label>
+              <input type="number" class="form-control" id="pessoasTrabalham" name="pessoasTrabalham" formControlName="pessoasTrabalham" />
+              <div
+                *ngIf="
+                  editForm.get('pessoasTrabalham')?.invalid &&
+                  (editForm.get('pessoasTrabalham')?.dirty || editForm.get('pessoasTrabalham')?.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('pessoasTrabalham')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('pessoasTrabalham')"></i>
+            </div>
+
+            <!-- Nº de Pessoas no Lar -->
+            <div class="form-group col-md-4 required">
+              <label for="numPessoasLar">Nº de Pessoas no Lar:</label>
+              <input type="number" class="form-control" id="numPessoasLar" name="numPessoasLar" formControlName="numPessoasLar" />
+              <div
+                *ngIf="
+                  editForm.get('numPessoasLar')?.invalid && (editForm.get('numPessoasLar')?.dirty || editForm.get('numPessoasLar')?.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('numPessoasLar')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('numPessoasLar')"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Recebe Benefício Social -->
+            <div class="form-group col-md-4 required">
+              <label for="beneficioSocial">Recebe Benefício Social?</label>
+              <select
+                class="form-select"
+                id="beneficioSocial"
+                name="beneficioSocial"
+                formControlName="beneficioSocial"
+                (change)="toggleBeneficiosField()"
+              >
+                <option value="" disabled selected>Selecione</option>
+                <option value="SIM">Sim</option>
+                <option value="NAO">Não</option>
+              </select>
+              <div
+                *ngIf="
+                  editForm.get('beneficioSocial')?.invalid &&
+                  (editForm.get('beneficioSocial')?.dirty || editForm.get('beneficioSocial')?.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('beneficioSocial')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+            </div>
+
+            <!-- Quais Benefícios -->
+            <div class="form-group col-md-8 required" *ngIf="editForm.get('beneficioSocial')?.value === 'SIM'">
+              <label for="beneficios">Quais Benefícios?</label>
+              <textarea
+                class="form-control"
+                id="beneficios"
+                name="beneficios"
+                placeholder="Descreva os benefícios recebidos"
+                formControlName="beneficios"
+              ></textarea>
+              <div
+                *ngIf="editForm.get('beneficios')?.invalid && (editForm.get('beneficios')?.dirty || editForm.get('beneficios')?.touched)"
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('beneficios')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('beneficios')"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Tipo de Residência -->
+            <div class="form-group col-md-6 required">
+              <label for="tipoResidencia">Tipo de Residência:</label>
+              <select class="form-select" id="tipoResidencia" name="tipoResidencia" formControlName="tipoResidencia">
+                <option value="" disabled selected>Selecione</option>
+                <option value="CASA">Casa</option>
+                <option value="APARTAMENTO">Apartamento</option>
+                <option value="OUTRO">Outro</option>
+              </select>
+              <div
+                *ngIf="
+                  editForm.get('tipoResidencia')?.invalid &&
+                  (editForm.get('tipoResidencia')?.dirty || editForm.get('tipoResidencia')?.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('tipoResidencia')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+            </div>
+
+            <!-- Descrição do Tipo de Residência -->
+            <div class="form-group col-md-6" *ngIf="editForm.get('tipoResidencia')?.value === 'OUTRO'">
+              <label for="tipoResidenciaDesc">Descreva:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="tipoResidenciaDesc"
+                name="tipoResidenciaDesc"
+                placeholder="Descreva o tipo de residência"
+                formControlName="tipoResidenciaDesc"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('tipoResidenciaDesc')"></i>
+            </div>
+
+            <!-- Situação da Residência -->
+            <div class="form-group col-md-6 required">
+              <label for="situacaoResidencia">Situação da Residência:</label>
+              <select class="form-select" id="situacaoResidencia" name="situacaoResidencia" formControlName="situacaoResidencia">
+                <option value="" disabled selected>Selecione</option>
+                <option value="PROPRIA">Própria</option>
+                <option value="ALUGADA">Alugada</option>
+                <option value="CEDIDA">Cedida</option>
+                <option value="OUTRA">Outra</option>
+              </select>
+              <div
+                *ngIf="
+                  editForm.get('situacaoResidencia')?.invalid &&
+                  (editForm.get('situacaoResidencia')?.dirty || editForm.get('situacaoResidencia')?.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('situacaoResidencia')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+            </div>
+
+            <!-- Descrição da Situação da Residência -->
+            <div class="form-group col-md-6" *ngIf="editForm.get('situacaoResidencia')?.value === 'OUTRA'">
+              <label for="situacaoResidenciaDesc">Descreva:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="situacaoResidenciaDesc"
+                name="situacaoResidenciaDesc"
+                placeholder="Descreva a situação da residência"
+                formControlName="situacaoResidenciaDesc"
+              />
+              <i class="bi bi-x form-clear" (click)="clearInput('situacaoResidenciaDesc')"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contato de Emergência -->
+        <div
+          class="collapse-header full-width"
+          data-bs-toggle="collapse"
+          href="#contato-emergencia"
+          role="button"
+          aria-expanded="true"
+          aria-controls="contato-emergencia"
+          (click)="toggleIcon($event, 'contato-emergencia')"
+        >
+          <h3>Contato de Emergência</h3>
+          <i class="bi bi-chevron-down" id="icon-contato-emergencia"></i>
+        </div>
+        <div class="collapse show" id="contato-emergencia">
+          <div class="row">
+            <div class="form-group col-md-6 required">
+              <label for="contatoEmergencia">Nome do Contato de Emergência:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="contatoEmergencia"
+                name="contatoEmergencia"
+                placeholder="Nome do contato"
+                formControlName="contatoEmergencia"
+              />
+              <div
+                *ngIf="
+                  editForm.get('contatoEmergencia')!.invalid &&
+                  (editForm.get('contatoEmergencia')!.dirty || editForm.get('contatoEmergencia')!.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('contatoEmergencia')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('contatoEmergencia')"></i>
+            </div>
+            <div class="form-group col-md-6 required">
+              <label for="foneEmergencia">Telefone do Contato de Emergência:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="foneEmergencia"
+                name="foneEmergencia"
+                placeholder="(DDD) Número"
+                formControlName="foneEmergencia"
+              />
+              <div
+                *ngIf="
+                  editForm.get('foneEmergencia')!.invalid &&
+                  (editForm.get('foneEmergencia')!.dirty || editForm.get('foneEmergencia')!.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('foneEmergencia')?.errors?.required">Este campo é obrigatório.</small>
+                <small *ngIf="editForm.get('foneEmergencia')?.errors?.telefoneInvalido">Telefone inválido.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('foneEmergencia')"></i>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-12 required">
+              <label for="relacaoEmergencia">Relação com o Aluno:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="relacaoEmergencia"
+                name="relacaoEmergencia"
+                placeholder="Ex: Tio, Avó, Vizinho"
+                formControlName="relacaoEmergencia"
+              />
+              <div
+                *ngIf="
+                  editForm.get('relacaoEmergencia')!.invalid &&
+                  (editForm.get('relacaoEmergencia')!.dirty || editForm.get('relacaoEmergencia')!.touched)
+                "
+                class="error-message"
+              >
+                <small *ngIf="editForm.get('relacaoEmergencia')?.errors?.required">Este campo é obrigatório.</small>
+              </div>
+              <i class="bi bi-x form-clear" (click)="clearInput('relacaoEmergencia')"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Autorização para Deslocamento -->
+        <div
+          class="collapse-header full-width"
+          data-bs-toggle="collapse"
+          href="#autorizacao-deslocamento"
+          role="button"
+          aria-expanded="true"
+          aria-controls="autorizacao-deslocamento"
+          (click)="toggleIcon($event, 'autorizacao-deslocamento')"
+        >
+          <h3>Autorização para Deslocamento</h3>
+          <i class="bi bi-chevron-down" id="icon-autorizacao-deslocamento"></i>
+        </div>
+        <div class="collapse show" id="autorizacao-deslocamento">
+          <div formArrayName="deslocamentos">
+            <div *ngFor="let deslocamento of deslocamentos.controls; let i = index" [formGroupName]="i">
+              <div class="row mt-2">
+                <div class="form-group col-md-5">
+                  <label for="deslocamento-nome-{{ i }}">Nome:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="deslocamento-nome-{{ i }}"
+                    name="deslocamento-nome"
+                    placeholder="Nome da pessoa autorizada"
+                    formControlName="nome"
+                  />
+                  <i class="bi bi-x form-clear" (click)="clearInput('deslocamentos.' + i + '.nome')"></i>
+                </div>
+                <div class="form-group col-md-5">
+                  <label for="deslocamento-grau-{{ i }}">Grau de Parentesco:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="deslocamento-grau-{{ i }}"
+                    name="deslocamento-grau"
+                    placeholder="Grau de parentesco"
+                    formControlName="grau"
+                  />
+                  <i class="bi bi-x form-clear" (click)="clearInput('deslocamentos.' + i + '.grau')"></i>
+                </div>
+                <div class="form-group col-md-2">
+                  <label>Remover:</label>
+                  <button type="button" class="btn btn-danger form-control" (click)="removerDeslocamento(i)">X</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary mt-2" (click)="adicionarDeslocamento()">Adicionar Pessoa</button>
+        </div>
+
+        <div class="form-group required mt-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="autorizacao" name="autorizacao" formControlName="autorizacao" />
+            <label class="form-check-label" for="autorizacao">
+              Autorizo a participação no PROJETO SEMEAR e das atividades existentes, conforme as normas e regulamentos, e autorizo o uso da
+              imagem deste aluno em publicações.
+            </label>
+            <div
+              *ngIf="editForm.get('autorizacao')!.invalid && (editForm.get('autorizacao')!.dirty || editForm.get('autorizacao')!.touched)"
+              class="error-message"
+            >
+              <small *ngIf="editForm.get('autorizacao')?.errors?.required">Este campo é obrigatório.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-container">
+          <button
+            type="submit"
+            id="save-entity"
+            data-cy="entityCreateSaveButton"
+            [disabled]="editForm.invalid || isSaving"
+            class="btn btn-primary"
+          >
+            Enviar Matrícula
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

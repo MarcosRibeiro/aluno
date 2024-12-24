@@ -1,14 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 import { HealthDetails, HealthKey } from '../health.model';
 
 @Component({
   standalone: true,
   selector: 'jhi-health-modal',
   templateUrl: './health-modal.component.html',
-  imports: [SharedModule],
+  imports: [CadastroAlunoModule],
 })
 export default class HealthModalComponent {
   health?: { key: HealthKey; value: HealthDetails };

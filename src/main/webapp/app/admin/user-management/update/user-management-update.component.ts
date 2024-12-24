@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 import { LANGUAGES } from 'app/config/language.constants';
 import { IUser } from '../user-management.model';
 import { UserManagementService } from '../service/user-management.service';
@@ -18,7 +18,7 @@ const newUser: IUser = {
   standalone: true,
   selector: 'jhi-user-mgmt-update',
   templateUrl: './user-management-update.component.html',
-  imports: [SharedModule, FormsModule, ReactiveFormsModule],
+  imports: [CadastroAlunoModule, FormsModule, ReactiveFormsModule],
 })
 export default class UserManagementUpdateComponent implements OnInit {
   languages = LANGUAGES;

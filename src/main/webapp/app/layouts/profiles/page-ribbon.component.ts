@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 import { ProfileService } from './profile.service';
 
 @Component({
@@ -16,7 +16,7 @@ import { ProfileService } from './profile.service';
     }
   `,
   styleUrl: './page-ribbon.component.scss',
-  imports: [SharedModule],
+  imports: [CadastroAlunoModule],
 })
 export default class PageRibbonComponent implements OnInit {
   ribbonEnv$?: Observable<string | undefined>;

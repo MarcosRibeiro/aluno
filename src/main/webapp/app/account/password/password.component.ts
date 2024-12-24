@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
 import { PasswordService } from './password.service';
@@ -11,7 +11,7 @@ import PasswordStrengthBarComponent from './password-strength-bar/password-stren
 @Component({
   standalone: true,
   selector: 'jhi-password',
-  imports: [SharedModule, FormsModule, ReactiveFormsModule, PasswordStrengthBarComponent],
+  imports: [CadastroAlunoModule, FormsModule, ReactiveFormsModule, PasswordStrengthBarComponent],
   templateUrl: './password.component.html',
 })
 export default class PasswordComponent implements OnInit {

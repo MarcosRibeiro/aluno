@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
 import { LANGUAGES } from 'app/config/language.constants';
@@ -12,7 +12,7 @@ const initialAccount: Account = {} as Account;
 @Component({
   standalone: true,
   selector: 'jhi-settings',
-  imports: [SharedModule, FormsModule, ReactiveFormsModule],
+  imports: [CadastroAlunoModule, FormsModule, ReactiveFormsModule],
   templateUrl: './settings.component.html',
 })
 export default class SettingsComponent implements OnInit {

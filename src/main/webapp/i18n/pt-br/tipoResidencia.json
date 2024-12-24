@@ -1,0 +1,10 @@
+{
+  "cadastroAlunoApp": {
+    "TipoResidencia": {
+      "null": "",
+      "CASA": "CASA",
+      "APARTAMENTO": "APARTAMENTO",
+      "OUTRO": "OUTRO"
+    }
+  }
+}

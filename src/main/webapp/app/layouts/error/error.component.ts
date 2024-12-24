@@ -2,13 +2,13 @@ import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 
 @Component({
   standalone: true,
   selector: 'jhi-error',
   templateUrl: './error.component.html',
-  imports: [SharedModule],
+  imports: [CadastroAlunoModule],
 })
 export default class ErrorComponent implements OnInit, OnDestroy {
   errorMessage = signal<string | undefined>(undefined);

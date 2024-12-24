@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IAuthority } from '../authority.model';
@@ -15,7 +15,7 @@ import { AuthorityFormGroup, AuthorityFormService } from './authority-form.servi
   standalone: true,
   selector: 'jhi-authority-update',
   templateUrl: './authority-update.component.html',
-  imports: [SharedModule, FormsModule, ReactiveFormsModule],
+  imports: [CadastroAlunoModule, FormsModule, ReactiveFormsModule],
 })
 export class AuthorityUpdateComponent implements OnInit {
   isSaving = false;

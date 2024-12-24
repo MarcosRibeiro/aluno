@@ -3,7 +3,7 @@ import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/r
 import { Observable, Subscription, combineLatest, filter, tap } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 import { SortByDirective, SortDirective, SortService, type SortState, sortStateSignal } from 'app/shared/sort';
 import { DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
 import { FormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ import { AuthorityDeleteDialogComponent } from '../delete/authority-delete-dialo
   imports: [
     RouterModule,
     FormsModule,
-    SharedModule,
+    CadastroAlunoModule,
     SortDirective,
     SortByDirective,
     DurationPipe,

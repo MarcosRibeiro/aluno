@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 import { Thread, ThreadState } from 'app/admin/metrics/metrics.model';
 
 @Component({
@@ -9,7 +9,7 @@ import { Thread, ThreadState } from 'app/admin/metrics/metrics.model';
   selector: 'jhi-thread-modal',
   templateUrl: './metrics-modal-threads.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SharedModule],
+  imports: [CadastroAlunoModule],
 })
 export class MetricsModalThreadsComponent implements OnInit {
   ThreadState = ThreadState;

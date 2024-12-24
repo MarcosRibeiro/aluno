@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 import { ITEM_DELETED_EVENT } from 'app/config/navigation.constants';
 import { IAuthority } from '../authority.model';
 import { AuthorityService } from '../service/authority.service';
@@ -10,7 +10,7 @@ import { AuthorityService } from '../service/authority.service';
 @Component({
   standalone: true,
   templateUrl: './authority-delete-dialog.component.html',
-  imports: [SharedModule, FormsModule],
+  imports: [CadastroAlunoModule, FormsModule],
 })
 export class AuthorityDeleteDialogComponent {
   authority?: IAuthority;

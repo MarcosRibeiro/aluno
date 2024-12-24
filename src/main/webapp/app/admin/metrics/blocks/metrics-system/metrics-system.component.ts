@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import SharedModule from 'app/shared/shared.module';
+import CadastroAlunoModule from 'app/shared/shared.module';
 import { ProcessMetrics } from 'app/admin/metrics/metrics.model';
 
 @Component({
@@ -8,7 +8,7 @@ import { ProcessMetrics } from 'app/admin/metrics/metrics.model';
   selector: 'jhi-metrics-system',
   templateUrl: './metrics-system.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SharedModule],
+  imports: [CadastroAlunoModule],
 })
 export class MetricsSystemComponent {
   /**
