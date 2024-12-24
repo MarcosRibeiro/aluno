@@ -77,9 +77,9 @@ export class CadastroAlunoUpdateComponent implements OnInit {
     protected dataUtils: DataUtils,
     protected eventManager: EventManager,
     protected cadastroAlunoService: CadastroAlunoService,
-    protected cadastroAlunoFormService: CadastroAlunoFormService,
     protected elementRef: ElementRef,
     protected activatedRoute: ActivatedRoute,
+    protected cadastroAlunoFormService: CadastroAlunoFormService, // Injeção do serviço
   ) {
     this.editForm = this.cadastroAlunoFormService.createCadastroAlunoFormGroup();
   }
